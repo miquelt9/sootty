@@ -30,6 +30,7 @@ Optional arguments include:
 - `-w | --wires LIST` Comma-separated list of wires to include in the visualization (default to all wires).
 - `-b | --break FORMULA` Specify the formula for the points in time to be highlighted.
 - `-r | --radix N` Display values in radix N (default 10).
+- `--label_width N` Display the first N characters of labels (default 10).
 - `-S | --save SAVENAME` Saves current query for future reuse.
 - `-R | --reload SAVENAME` Loads a saved query. Requires query name as string.
 - `--btable` Print the wire value table at breakpoints to `stdout` (`-b` is required).

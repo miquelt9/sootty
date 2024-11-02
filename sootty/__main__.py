@@ -81,6 +81,13 @@ def parse_args():
         dest="radix",
         help="displayed radix of data numbers (2 - 36)",
     )
+    arg_label_width = parser.add_argument(
+        "--label_width",
+        type=int,
+        default=10,
+        dest="label_width",
+        help="display the first LABEL_WIDTH characters on labels",
+    )
     parser.add_argument(
         "-S",
         "--save",
@@ -103,6 +110,8 @@ def parse_args():
         )
     if args.radix < 2 or args.radix > 36:
         raise argparse.ArgumentError(arg_radix, "radix must be between 2 and 36")
+    if args.label_width < 0:
+        raise argparse.ArgumentError(arg_label_width, "label_width can't be negative")
     if args.save is not None:
         save_query(args)  # Save args to file
     if args.reload is not None:
@@ -118,11 +127,12 @@ def parse_args():
         args.end,
         args.output,
         args.radix,
+        args.label_width
     )
 
 
 def main():
-    filename, wires, breakpoints, btable, length, start, end, output, radix = parse_args()
+    filename, wires, breakpoints, btable, length, start, end, output, radix, label_width = parse_args()
 
     if filename is None:
         raise SoottyError("Input file is required. See --help for more info.")
@@ -160,6 +170,7 @@ def main():
         wires=wires,
         breakpoints=breakpoints,
         vector_radix=radix,
+        label_width=label_width,
     )
 
     # This was the previous way of handling invalid wire names. It is no longer needed,

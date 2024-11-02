@@ -78,6 +78,8 @@ class Visualizer:
         wires="",
         breakpoints=None,
         vector_radix=10,
+        label_width=10
+    ,
     ):
         """
         Converts the provided wiretrace object to a VectorImage object (svg).
@@ -95,16 +97,19 @@ class Visualizer:
                     map(lambda wire: wire.name, wiretrace.compute_wires(wires.strip()))
                 )
             )
-
+            
+        self.style.LABEL_WIDTH = label_width
+        self.style.TEXT_WIDTH = self.style.CHAR_WIDTH * (self.style.LABEL_WIDTH + 2)
+        
         return VectorImage(
             self._wiretrace_to_svg(
-                wiretrace, start, length, wires, breakpoints, vector_radix
+                wiretrace, start, length, wires, breakpoints, vector_radix,
             )
         )
 
     def _wiretrace_to_svg(
-        self, wiretrace, start, length, wires=None, breakpoints=None, vector_radix=10
-    ):
+        self, wiretrace, start, length, wires=None, breakpoints=None, vector_radix=10,
+    ):        
         width = (
             2 * self.style.LEFT_MARGIN + self.style.TEXT_WIDTH + self.style.FULL_WIDTH
         )
@@ -210,7 +215,7 @@ class Visualizer:
         return svg
 
     def _wiregroup_to_svg(
-        self, wiregroup, left, top, start, length, wires=None, vector_radix=10
+        self, wiregroup, left, top, start, length, wires=None, vector_radix=10,
     ):
         svg = ""
         index = 0
@@ -253,9 +258,9 @@ class Visualizer:
                 "fill": self.style.TEXT_COLOR,
                 "font-family": "monospace",
                 "content": html.escape(
-                    wire.name
-                    if len(wire.name) <= self.style.LABEL_WIDTH
-                    else wire.name[: max(self.style.LABEL_WIDTH - 3, 0)] + "..."
+                    wire.name if len(wire.name) <= self.style.LABEL_WIDTH
+                    else wire.name[:self.style.LABEL_WIDTH - 3] + "..." if self.style.LABEL_WIDTH > 3
+                    else "." * self.style.LABEL_WIDTH
                 ),
             }
         )
